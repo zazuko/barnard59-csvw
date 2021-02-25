@@ -1,8 +1,8 @@
-const clownface = require('clownface-io')
-const { PassThrough } = require('stream')
-const { readable } = require('duplex-to')
-const ns = require('@tpluscode/rdf-ns-builders')
-const { fetch } = require('./protoFetch')
+import clownface from 'clownface-io'
+import { PassThrough } from 'stream'
+import { readable } from 'duplex-to'
+import { csvw as _csvw } from '@tpluscode/rdf-ns-builders'
+import { fetch } from './protoFetch.js'
 
 const json = /json$/i
 
@@ -23,11 +23,11 @@ function fetchMapping (csvw) {
 }
 
 function fetchDataFile (mappings) {
-  const url = mappings.any().has(ns.csvw.url).out(ns.csvw.url).value
+  const url = mappings.any().has(_csvw.url).out(_csvw.url).value
   return fetch(url)
 }
 
-function fetchCsv ({ csvw }) {
+export default function fetchCsv ({ csvw }) {
   const csvStream = new PassThrough()
 
   Promise.resolve()
@@ -42,5 +42,3 @@ function fetchCsv ({ csvw }) {
 
   return readable(csvStream)
 }
-
-module.exports = fetchCsv

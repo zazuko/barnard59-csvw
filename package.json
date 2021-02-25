@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Simplifies handling CSVW mapping documents in barnard59 pipelines",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "lint": "standard",
     "test": "mocha",
@@ -16,7 +17,7 @@
   "dependencies": {
     "@rdfjs/data-model": "^1.2.0",
     "@tpluscode/rdf-ns-builders": "^0.4.0",
-    "barnard59": "^0.1.1",
+    "barnard59": "^0.1.2",
     "clownface-io": "github:zazuko/clownface-io#tpluscode-proposals",
     "duplex-to": "^1.0.0",
     "file-fetch": "^1.5",
@@ -25,11 +26,11 @@
   },
   "devDependencies": {
     "barnard59-docs": "github:tpluscode/barnard59-docs#local-command",
-    "chai": "^4.2.0",
+    "chai": "^4.3.0",
     "chai-as-promised": "^7.1.1",
-    "husky": "^5.0.9",
-    "mocha": "^8.2.1",
-    "sinon": "^9.2.3",
+    "husky": "^5.1.1",
+    "mocha": "^8.3.0",
+    "sinon": "^9.2.4",
     "sinon-chai": "^3.5.0",
     "standard": "^16.0.3",
     "stream-to-string": "^1.2.0",

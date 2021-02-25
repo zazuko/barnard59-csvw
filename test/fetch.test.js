@@ -1,39 +1,46 @@
-const { describe, it, beforeEach, before, after } = require('mocha')
-const { expect } = require('chai')
-const Runner = require('barnard59/lib/runner')
-const path = require('path')
-const clownface = require('clownface-io')
-const { namedNode } = require('@rdfjs/data-model')
-const toString = require('stream-to-string')
-const toStream = require('string-to-stream')
-const sinon = require('sinon')
-const proto = require('../lib/protoFetch')
+import { describe, it, beforeEach, before, after } from 'mocha'
+import chai from 'chai';
+import { create } from 'barnard59/lib/runner.js'
+import { resolve, dirname } from 'path'
+import clownface from 'clownface-io'
+import rdf from '@rdfjs/data-model';
+import toString from 'stream-to-string'
+import toStream from 'string-to-stream'
+import sinon from 'sinon';
+import proto, { fetch } from '../protoFetch.js'
+
+const { restore, stub } = sinon;
+const { expect } = chai;
+const { namedNode } = rdf;
+
+const __dirname = dirname(new URL(import.meta.url).pathname)
 
 describe('fetch', function () {
-  const pipelinesPath = 'file:' + path.resolve(__dirname, 'pipelines/fetch.ttl')
-  const basePath = path.resolve(__dirname, '..')
+  const pipelinesPath = 'file:' + resolve(__dirname, 'pipelines/fetch.ttl')
+  const basePath = resolve(__dirname, '..')
 
   let variable
   const outputStream = process.stdout
 
   before(() => {
-    sinon.restore()
-    sinon.stub(proto, 'fetch')
+    restore()
+    stub(proto, 'fetch')
   })
 
   beforeEach(() => {
     variable = new Map()
-    variable.set('basePath', path.resolve(__dirname, '..'))
+    variable.set('basePath', resolve(__dirname, '..'))
   })
 
   after(() => {
-    sinon.restore()
+    restore()
   })
 
   it('parses local JSON-LD mappings and fetches remote CSV', async () => {
     // given
     const pipeline = await clownface().namedNode(pipelinesPath).fetch()
-    const run = Runner.create({
+
+    const run = create({
       outputStream,
       variable,
       basePath,
@@ -49,13 +56,13 @@ describe('fetch', function () {
 
     // then
     expect(result).to.eq('foo,bar,baz\n10,20,30')
-    expect(proto.fetch).to.have.been.calledWith('http://example.com/test.csv')
+    expect(fetch).to.have.been.calledWith('http://example.com/test.csv')
   })
 
   it('emits error if CSV fails to load ', async () => {
     // given
     const pipeline = await clownface().namedNode(pipelinesPath).fetch()
-    const run = Runner.create({
+    const run = create({
       outputStream,
       variable,
       basePath,
@@ -78,7 +85,7 @@ describe('fetch', function () {
   it('emits error if CSVW fails to load ', async () => {
     // given
     const pipeline = await clownface().namedNode(pipelinesPath).fetch()
-    const run = Runner.create({
+    const run = create({
       outputStream,
       variable,
       basePath,
